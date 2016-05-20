@@ -4,6 +4,7 @@
   "description": "Converts an HTML string to a plastiq render function",
   "main": "index.js",
   "scripts": {
+    "test": "node test.js"
   },
   "keywords": [
     "plastiq",
@@ -15,5 +16,9 @@
   "dependencies": {
     "html-to-vdom": "0.7.0",
     "virtual-dom": "2.1.1"
+  },
+  "devDependencies": {
+    "colors": "^1.1.2",
+    "diff": "^2.2.2"
   }
 }
