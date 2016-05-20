@@ -1,11 +1,12 @@
 # html-to-plastiq
-Converts an html string to a plastiq render function
+Converts an html string to a [plastiq](https://github.com/featurist/plastiq) render function
 
 ## Example
 ### Input
-```JavaScript
-var convertToPlastiq = require('html-to-plastiq');
-var htmlString ="<html>
+#### html
+
+```Html
+<html>
   <head>
     <meta charset="utf-8">
     <title>My App</title>
@@ -22,9 +23,11 @@ var htmlString ="<html>
       </ul>
     </div>
   </body>
-</html>";
-
-convertToPlastiq(htmlString);
+</html>
+```
+```JavaScript
+var convertToPlastiq = require('html-to-plastiq');
+convertToPlastiq(html);
 ```
 ### Output
 ```JavaScript
