@@ -1,0 +1,19 @@
+{
+  "name": "html-to-plastiq",
+  "version": "1.0.0",
+  "description": "Converts an HTML string to a plastiq render function",
+  "main": "index.js",
+  "scripts": {
+  },
+  "keywords": [
+    "plastiq",
+    "html",
+    "render"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "html-to-vdom": "0.7.0",
+    "virtual-dom": "2.1.1"
+  }
+}
