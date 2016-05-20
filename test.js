@@ -18,7 +18,7 @@ function render() {
     h("body", 
       h("h1", "html-to-plastiq"), 
       h("p#intro.super.special", "\n      Some of ", 
-        h("a", {"attributes":{"ng-boo":"y"},"href":"us"}, "us"), " prefer functions\n    ")))
+        h("a", { attributes: { "ng-boo": "y" }, href: "us" }, "us"), " prefer functions\n    ")))
 }
 
 var expected = render.toString();

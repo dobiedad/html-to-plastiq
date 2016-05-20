@@ -76,12 +76,23 @@ function plastiqifyChildrenOf(vnode) {
 
 function callPlastiqHtml(m, indent) {
   return spaces(indent) + 'h(' + [JSON.stringify(m.selector)].concat((m.arguments || []).map(function(a) {
-    return typeof(a) == 'string' || !a.selector ? JSON.stringify(a) : callPlastiqHtml(a, indent + 1);
+    return (typeof(a) == 'string' || !a.selector) ? jsify(a) : callPlastiqHtml(a, indent + 1);
   })).join(", ") + ")";
 }
 
 function spaces(indent) {
   return "\n" + Array(indent).join("  ");
+}
+
+function jsify(arg) {
+  if (typeof(arg) == 'string') {
+    return JSON.stringify(arg);
+  }
+  return '{ ' + Object.keys(arg).map(function(k) {
+    var key = /^[a-zA-Z0-9_]+$/.test(k) ? k : JSON.stringify(k);
+    var val = typeof(arg[k]) == 'object' ? jsify(arg[k]) : JSON.stringify(arg[k]);
+    return key + ': ' + val;
+  }).join(', ') + ' }'
 }
 
 function generateRenderFunctionFromVTree(vtree) {
