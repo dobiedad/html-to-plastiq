@@ -7,7 +7,7 @@ var inputHtml = [
   "  <body>",
   "    <h1>html-to-plastiq</h1>",
   "    <p id=\"intro\" class=\"super special\">",
-  "      Some of <a href=\"us\">us</a> prefer functions",
+  "      Some of <a href=\"us\" ng-boo=\"y\">us</a> prefer functions",
   "    </p>",
   "  </body>",
   "</html>"
@@ -18,7 +18,7 @@ function render() {
     h("body", 
       h("h1", "html-to-plastiq"), 
       h("p#intro.super.special", "\n      Some of ", 
-        h("a", {"href":"us"}, "us"), " prefer functions\n    ")))
+        h("a", {"attributes":{"ng-boo":"y"},"href":"us"}, "us"), " prefer functions\n    ")))
 }
 
 var expected = render.toString();
