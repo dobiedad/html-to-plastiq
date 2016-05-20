@@ -13,18 +13,10 @@ function plastiqifyVNode(vnode) {
     return plastiqifyVNode(vnode[0]);
   }
   if (vnode.tagName) {
-    return { selector: selectorFor(vnode), arguments: childArguments(vnode) };
+    return { selector: selectorFor(vnode), arguments: plastiqHtmlArgumentsFor(vnode) };
   } else {
     return vnode.text;
   }
-}
-
-function childArguments(vnode) {
-  return attributesOf(vnode).concat(removeWhitespaces(childNodesOf(vnode)));
-}
-
-function removeWhitespaces(arguments) {
-  return arguments.filter(function(a) { return !/^\s*$/g.test(a); })
 }
 
 function selectorFor(vnode) {
@@ -33,6 +25,14 @@ function selectorFor(vnode) {
     selector += '#' + vnode.properties.id;
   }
   return selector + classesFor(vnode);
+}
+
+function plastiqHtmlArgumentsFor(vnode) {
+  return attributesOf(vnode).concat(removeWhitespaces(plastiqifyChildrenOf(vnode)));
+}
+
+function removeWhitespaces(arguments) {
+  return arguments.filter(function(a) { return !/^\s*$/g.test(a); })
 }
 
 function classesFor(vnode) {
@@ -64,7 +64,7 @@ function attributesOf(vnode) {
   return [];
 }
 
-function childNodesOf(vnode) {
+function plastiqifyChildrenOf(vnode) {
   if (vnode.children) {
     return vnode.children.map(function(child) {
       return plastiqifyVNode(child);
@@ -74,9 +74,9 @@ function childNodesOf(vnode) {
   }
 }
 
-function generateFunctionFromPlastiqModel(m, indent) {
+function callPlastiqHtml(m, indent) {
   return spaces(indent) + 'h(' + [JSON.stringify(m.selector)].concat((m.arguments || []).map(function(a) {
-    return typeof(a) == 'string' || !a.selector ? JSON.stringify(a) : generateFunctionFromPlastiqModel(a, indent + 1);
+    return (typeof(a) == 'string' || !a.selector) ? jsify(a) : callPlastiqHtml(a, indent + 1);
   })).join(", ") + ")";
 }
 
@@ -84,7 +84,18 @@ function spaces(indent) {
   return "\n" + Array(indent).join("  ");
 }
 
+function jsify(arg) {
+  if (typeof(arg) == 'string') {
+    return JSON.stringify(arg);
+  }
+  return '{ ' + Object.keys(arg).map(function(k) {
+    var key = /^[a-zA-Z0-9_]+$/.test(k) ? k : JSON.stringify(k);
+    var val = typeof(arg[k]) == 'object' ? jsify(arg[k]) : JSON.stringify(arg[k]);
+    return key + ': ' + val;
+  }).join(', ') + ' }'
+}
+
 function generateRenderFunctionFromVTree(vtree) {
   var m = plastiqifyVNode(vtree);
-  return "function render() {\n  return " + generateFunctionFromPlastiqModel(m, 2).substr(3) + "\n}";
+  return "function render() {\n  return " + callPlastiqHtml(m, 2).substr(3) + "\n}";
 }
